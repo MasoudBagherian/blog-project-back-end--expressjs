@@ -19,6 +19,9 @@ const hasSmall = (word) => {
     .split('')
     .some((char) => isSmall(char));
 };
+const isNumeric = (char) => {
+  return !isNaN(char);
+};
 const hasNumeric = (word) => {
   return word
     .trim()
