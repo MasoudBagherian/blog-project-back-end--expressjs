@@ -48,10 +48,6 @@ module.exports.login_post = (req, res, next) => {
   const { email } = req.body;
   User.findOne({ email: email.toLowerCase() }).then((user) => {
     const token = createToken(user._id.toString());
-    // res.cookie('jwt-token', token, {
-    //   httpOnly: true,
-    //   maxAge: 60 * 60 * 24 * 1000,
-    // });
     return res.status(200).json({
       token,
       userId: user._id,

@@ -1,3 +1,6 @@
+// 3rd-party modules
+const truncatise = require('truncatise');
+
 const isCapital = (char) => {
   return char >= 'A' && char <= 'Z';
 };
@@ -53,4 +56,17 @@ module.exports.isPassword = (word) => {
     hasNumeric(word) &&
     isAlphaNumeric(word)
   );
+};
+module.exports.minWords = (value, number) => {
+  const options = {
+    TruncateBy: 'words',
+    TruncateLength: 1000,
+    StripHTML: false,
+  };
+  let text = truncatise(value, options);
+  text = text.replace(/>/g, '> ');
+  text = text.replace(/&nbsp;/g, ' ');
+  text = truncatise(text, { ...options, StripHTML: true });
+  text = text.split(' ').filter((el) => el !== '');
+  return text.length >= number;
 };
