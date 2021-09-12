@@ -4,21 +4,24 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const Article = require('../models/Article');
 const User = require('../models/User');
+const { deleteExtraImages } = require('../utils/deleteExtraImages');
 
 module.exports.users_info_get = (req, res, next) => {
   const user = req.user;
-  Article.find({ authorId: user._id }).then((articles) => {
-    res.status(200).json({
-      user: {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        username: user.username,
-        avatar: user.image,
-        email: user.email,
-      },
-      articles,
+  Article.find({ authorId: user._id })
+    .sort({ createdAt: -1 })
+    .then((articles) => {
+      res.status(200).json({
+        user: {
+          firstname: user.firstname,
+          lastname: user.lastname,
+          username: user.username,
+          avatar: user.image,
+          email: user.email,
+        },
+        articles,
+      });
     });
-  });
 };
 module.exports.users_change_password_put = (req, res, next) => {
   const errors = validationResult(req);
@@ -60,6 +63,7 @@ module.exports.users_edit_profile_put = (req, res, next) => {
     user.username = username.trim();
     user.image = image ? image.filename : user.image;
     return user.save().then((user) => {
+      deleteExtraImages();
       res.status(200).json({
         message: 'Profile edited successfully',
       });

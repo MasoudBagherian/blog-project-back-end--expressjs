@@ -27,3 +27,29 @@ module.exports.articles_post = (req, res, next) => {
     });
   });
 };
+module.exports.articles_get_one = (req, res, next) => {
+  const articleId = req.params.id;
+  Article.findById(articleId)
+    .populate('authorId')
+    .then((article) => {
+      if (!article) {
+        return res.status(403).json({
+          message: 'Article with this ID not found',
+        });
+      }
+      // console.log(article);
+      res.status(200).json({
+        article: {
+          title: article.title,
+          content: article.content,
+          image: article.image,
+          date: article.createdAt,
+        },
+        author: {
+          firstname: article.authorId.firstname,
+          lastname: article.authorId.lastname,
+          avatar: article.authorId.image,
+        },
+      });
+    });
+};
