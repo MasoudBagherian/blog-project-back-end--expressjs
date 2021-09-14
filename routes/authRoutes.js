@@ -17,9 +17,13 @@ router.post(
     signupValidation.validatePassword,
     signupValidation.validateConfirm,
   ],
-  authController.signup_post
+  authController.handleSignup
 );
 
-router.post('/login', loginValidation.validateLogin, authController.login_post);
+router.post(
+  '/login',
+  loginValidation.validateLogin,
+  authController.handleLogin
+);
 
 module.exports = router;

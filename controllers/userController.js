@@ -6,7 +6,7 @@ const Article = require('../models/Article');
 const User = require('../models/User');
 const { deleteExtraImages } = require('../utils/deleteExtraImages');
 
-module.exports.users_info_get = (req, res, next) => {
+module.exports.getUserInfo = (req, res, next) => {
   const user = req.user;
   Article.find({ authorId: user._id })
     .sort({ createdAt: -1 })
@@ -23,7 +23,7 @@ module.exports.users_info_get = (req, res, next) => {
       });
     });
 };
-module.exports.users_change_password_put = (req, res, next) => {
+module.exports.changePassword = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(404).json({
@@ -45,7 +45,7 @@ module.exports.users_change_password_put = (req, res, next) => {
       });
     });
 };
-module.exports.users_edit_profile_put = (req, res, next) => {
+module.exports.editUserProfile = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(404).json({

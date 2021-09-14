@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { createToken } = require('../utils/createToken');
 
-module.exports.signup_post = (req, res, next) => {
+module.exports.handleSignup = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(404).json({
@@ -37,7 +37,7 @@ module.exports.signup_post = (req, res, next) => {
       console.log(err);
     });
 };
-module.exports.login_post = (req, res, next) => {
+module.exports.handleLogin = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(404).json({

@@ -7,12 +7,18 @@ const articleValidation = require('../middleware/validation/article');
 const router = express.Router();
 
 // baseUrl ===> /articles
+router.get('/:id', isAuthenticated, articleController.getArticle);
 
 router.post(
   '/',
   isAuthenticated,
   [articleValidation.validateTitle, articleValidation.validateContent],
-  articleController.articles_post
+  articleController.createArticle
 );
-router.get('/:id', isAuthenticated, articleController.articles_get_one);
+router.put(
+  '/:id',
+  isAuthenticated,
+  [articleValidation.validateTitle, articleValidation.validateContent],
+  articleController.updateArticle
+);
 module.exports = router;
