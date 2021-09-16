@@ -8,7 +8,10 @@ const router = express.Router();
 const profileValidation = require('../middleware/validation/profile');
 
 // baseUrl ===> /users
-router.get('/info', isAuthenticated, userController.getUserInfo);
+
+router.get('/', isAuthenticated, userController.getAllUsers);
+router.get('/info', isAuthenticated, userController.getLoggedInUserInfo);
+router.get('/:id', isAuthenticated, userController.getUser);
 router.put(
   '/change-password',
   isAuthenticated,
@@ -30,4 +33,5 @@ router.put(
   ],
   userController.editUserProfile
 );
+router.delete('/:id', isAuthenticated, userController.deleteUser);
 module.exports = router;

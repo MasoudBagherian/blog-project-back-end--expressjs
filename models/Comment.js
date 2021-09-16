@@ -1,5 +1,6 @@
 // 3rd-party modules
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
@@ -21,4 +22,4 @@ const commentSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model(commentSchema, 'comments');
+module.exports = mongoose.model('comments', commentSchema);

@@ -4,9 +4,29 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const Article = require('../models/Article');
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 const { deleteExtraImages } = require('../utils/deleteExtraImages');
 
-module.exports.getUserInfo = (req, res, next) => {
+module.exports.getAllUsers = (req, res, next) => {
+  User.find()
+    .sort({ createdAt: -1 })
+    .then((users) => {
+      res.status(200).json({
+        users: users.map((user) => ({
+          id: user._id,
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          avatar: user.image,
+          date: user.createdAt,
+          role: user.role,
+        })),
+      });
+    });
+};
+
+module.exports.getLoggedInUserInfo = (req, res, next) => {
   const user = req.user;
   Article.find({ authorId: user._id })
     .sort({ createdAt: -1 })
@@ -22,6 +42,30 @@ module.exports.getUserInfo = (req, res, next) => {
         articles,
       });
     });
+};
+module.exports.getUser = (req, res, next) => {
+  const userId = req.params.id;
+  const userInfo = { user: null, articles: null };
+  User.findById(userId).then((user) => {
+    if (!user) {
+      return res.status(403).json({
+        message: 'User not found',
+      });
+    }
+    userInfo.user = {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      username: user.username,
+      avatar: user.image,
+      email: user.email,
+    };
+    Article.find({ authorId: userId })
+      .sort({ createdAt: -1 })
+      .then((articles) => {
+        userInfo.articles = articles;
+        res.status(200).json(userInfo);
+      });
+  });
 };
 module.exports.changePassword = (req, res, next) => {
   const errors = validationResult(req);
@@ -68,5 +112,25 @@ module.exports.editUserProfile = (req, res, next) => {
         message: 'Profile edited successfully',
       });
     });
+  });
+};
+module.exports.deleteUser = (req, res, next) => {
+  const userId = req.params.id;
+  User.findByIdAndRemove(userId).then((deletedUser) => {
+    if (!deletedUser) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
+    Article.deleteMany({ authorId: userId })
+      .then((result) => {
+        return Comment.deleteMany({ authorId: userId });
+      })
+      .then((result) => {
+        res.status(200).json({
+          message:
+            'User and all of his(her) articles and comments deleted successfully',
+        });
+      });
   });
 };

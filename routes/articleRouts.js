@@ -8,7 +8,7 @@ const router = express.Router();
 
 // baseUrl ===> /articles
 router.get('/:id', isAuthenticated, articleController.getArticle);
-
+router.get('/', isAuthenticated, articleController.getAllArticles);
 router.post(
   '/',
   isAuthenticated,
@@ -21,4 +21,6 @@ router.put(
   [articleValidation.validateTitle, articleValidation.validateContent],
   articleController.updateArticle
 );
+
+router.delete('/:id', isAuthenticated, articleController.deleteArticle);
 module.exports = router;
