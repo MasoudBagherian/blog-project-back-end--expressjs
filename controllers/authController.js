@@ -52,6 +52,7 @@ module.exports.handleLogin = (req, res, next) => {
       token,
       userId: user._id,
       expiresIn: 1000 * 60 * 60 * 24,
+      // expiresIn: 1000 * 20,
       role: user.role,
     });
   });
