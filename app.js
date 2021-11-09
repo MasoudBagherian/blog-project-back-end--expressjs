@@ -61,4 +61,4 @@ app.use((req, res, next) => {
 
 app.use(mainRouter);
 // run server and connect to database
-connectDbAndRunServer(app, process.env.MONGODB_URI, process.env.PORT || 5000);
+connectDbAndRunServer(app, process.env.MONGODB_URI, process.env.PORT || 8000);
